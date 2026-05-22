@@ -46,8 +46,8 @@ class User:
             return(False, "Name is required")
         if type(name) != str:
             return(False, "Name must be a string")
-        if len(name) < 3:
-            return(False, "Name must be at least 3 characters long")
+        if len(name) < 3 or len(name) > 40:
+            return(False, "Name must be between 3 and 40 characters long")
         return(True, "")
     
 
