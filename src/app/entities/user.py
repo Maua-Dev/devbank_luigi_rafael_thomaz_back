@@ -1,8 +1,7 @@
-
 from typing import Tuple
-from ..errors.entity_errors import ParamNotValidated
 import re
 
+from ..errors.entity_errors import ParamNotValidated
 
 class User:
     
@@ -48,6 +47,10 @@ class User:
             return(False, "Name must be a string")
         if len(name) < 3 or len(name) > 40:
             return(False, "Name must be between 3 and 40 characters long")
+        if not re.fullmatch(r"^[a-zA-ZÀ-ÿ]+( [a-zA-ZÀ-ÿ]+)*$", name):
+            #this regex doesnt allow double spaces and beggining or ending with space
+            #while allowing only letters, including ç or á, ê, õ...
+            return(False, "Name must be only letters and spaces. Double spaces and starting or ending with space is not allowed")
         return(True, "")
     
 
@@ -71,7 +74,7 @@ class User:
             return(False, "Account must be a string")
         if not re.fullmatch(r"\d{5}-\d", account): 
             #using regex to validate both format and if there's non-numbers
-            return(False, "Account must follow the scheme 00000-0")
+            return(False, "Account must follow the format 00000-0")
         return(True, "")
     
 
