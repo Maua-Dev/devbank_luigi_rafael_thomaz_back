@@ -19,7 +19,7 @@ class IUserRepository(ABC):
 
 
     @abstractmethod
-    def get_user(self) -> User:
+    def get_first_user(self) -> User:
         """
         Return the current user.
 
