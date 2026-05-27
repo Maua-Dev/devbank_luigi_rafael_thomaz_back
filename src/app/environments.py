@@ -1,6 +1,9 @@
 
 from enum import Enum
 import os
+import stat
+
+from src.app.repo.user_repository_interface import IUserRepository
 
 from .errors.environment_errors import EnvironmentNotFound
 
@@ -40,6 +43,14 @@ class Environments:
             from .repo.item_repository_mock import ItemRepositoryMock
             return ItemRepositoryMock
         # use "elif" conditional to add other stages
+        else:
+            raise EnvironmentNotFound("STAGE")
+        
+    @staticmethod
+    def get_user_repo() -> IUserRepository:
+        if Environments.get_envs().stage == STAGE.TEST:
+            from .repo.user_repository_mock import UserRepositoryMock
+            return UserRepositoryMock
         else:
             raise EnvironmentNotFound("STAGE")
         
