@@ -1,9 +1,8 @@
 
 from enum import Enum
 import os
-import stat
 
-from src.app.repo.user_repository_interface import IUserRepository
+from ..app.repo.user_repository_interface import IUserRepository
 
 from .errors.environment_errors import EnvironmentNotFound
 

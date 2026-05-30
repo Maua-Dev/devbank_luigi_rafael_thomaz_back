@@ -1,12 +1,10 @@
 from fastapi import FastAPI, HTTPException
 from mangum import Mangum
 
-from src.app.entities.transaction import Transaction
-from src.app.enums.transaction_type_enum import TransactionTypeEnum
+from ..app.entities.transaction import Transaction
+from ..app.enums.transaction_type_enum import TransactionTypeEnum
 
 from .environments import Environments
-
-from .errors.entity_errors import ParamNotValidated
 
 
 app = FastAPI()
