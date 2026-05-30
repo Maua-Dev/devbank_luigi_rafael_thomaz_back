@@ -2,7 +2,7 @@ import pytest
 from fastapi.exceptions import HTTPException
 
 import src.app.main as main_module
-from src.app.main import get_user, get_history, post_deposit
+from src.app.main import get_user, get_history, post_deposit, post_withdraw
 from src.app.repo.user_repository_mock import UserRepositoryMock
 from src.app.entities.transaction import Transaction
 from src.app.enums.transaction_type_enum import TransactionTypeEnum
@@ -27,7 +27,6 @@ class Test_Main:
     def test_get_history_one_transaction(self):
         repo = main_module.user_repo
         #using the UserRepositoryMock() was throwing index error
-        response = get_history()
         transaction = Transaction(
             transaction_type = TransactionTypeEnum.DEPOSIT,
             value = 100.0,
@@ -99,7 +98,7 @@ class Test_Main:
 
 
     def test_post_deposit_updates_history(self):
-        request = {"100": 1}  # 100.0
+        request = {"100": 1}
         post_deposit(request=request)
 
         history = get_history()
@@ -164,3 +163,110 @@ class Test_Main:
         with pytest.raises(HTTPException) as err:
             post_deposit(request=request)
         assert err.value.status_code == 400
+
+
+    def test_post_withdraw(self):
+        request = {"100": 1}
+        response = post_withdraw(request=request)
+
+        assert response["current_balance"] == 900.0
+        assert type(response["timestamp"]) == float
+        assert response["timestamp"] > 0
+
+
+    def test_post_withdraw_multiple_notes(self):
+        request = {
+            "2": 50,
+            "5": 20,
+            "10": 10,
+            "20": 5,
+            "50": 2,
+            "100": 1,
+            "200": 1,
+        } #sum = 800
+        
+        response = post_withdraw(request=request)
+        assert response["current_balance"] == 200.0
+
+    
+    def test_post_withdraw_updates_balance(self):
+        request = {"50": 2}
+        post_withdraw(request=request)
+
+        user = main_module.user_repo.get_first_user()
+        assert user.current_balance == 900.0
+
+
+    def test_post_withdraw_updates_history(self):
+        request = {"100": 1}
+        post_withdraw(request=request)
+
+        history = get_history()
+        assert len(history["all_transactions"]) == 1
+        assert history["all_transactions"][0]["type"] == "WITHDRAW"
+        assert history["all_transactions"][0]["value"] == 100.0
+        assert history["all_transactions"][0]["current_balance"] == 900.0
+
+
+    def test_post_withdraw_greater_than_balance(self):
+        request = {"200": 10}
+    
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+
+        assert err.value.status_code == 403
+
+
+    def test_post_withdraw_empty_request(self):
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request={})
+
+        assert err.value.status_code == 400
+
+
+    def test_post_withdraw_all_zeros(self):
+        request = {"2": 0} #main creates the other notes as 0
+
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+        assert err.value.status_code == 400
+        assert err.value.detail == "Sem notas selecionadas"
+
+
+    def test_post_withdraw_invalid_note(self):
+        request = {"1": 1, "2": 2}
+        
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+        assert err.value.status_code == 400
+
+
+    def test_post_withdraw_invalid_note_string(self):
+        request = {"2": 1, "string": 1}
+
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+        assert err.value.status_code == 400
+
+    
+    def test_post_withdraw_negative_quantity(self):
+        request = {"2": -1}
+
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+        assert err.value.status_code == 400
+
+
+    def test_post_withdraw_quantity_not_int(self):
+        request = {"2": 1.5}
+        
+        with pytest.raises(HTTPException) as err:
+            post_withdraw(request=request)
+        assert err.value.status_code == 400
+
+
+    def test_post_withdraw_exact_balance(self):
+        request = {"200": 5}
+        response = post_withdraw(request=request)
+        
+        assert response["current_balance"] == 0.0
