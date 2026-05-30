@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from mangum import Mangum
 
-from ..app.entities.transaction import Transaction
-from ..app.enums.transaction_type_enum import TransactionTypeEnum
+from .entities.transaction import Transaction
+from .enums.transaction_type_enum import TransactionTypeEnum
 
 from .environments import Environments
 
@@ -55,8 +55,14 @@ def post_deposit(request: dict):
     if value == 0.0:
         raise HTTPException(status_code=400, detail="Sem notas selecionadas")
     
-    if value >= 2 * user_repo.get_first_user().current_balance:
-        raise HTTPException(status_code=403, detail="Depósito suspeito")
+    current_balance = user_repo.get_first_user().current_balance
+
+    #check for suspicious deposit, but if user has 0.0 balance, allow up to $20 deposit
+    if value >= 2 * current_balance:
+        if current_balance == 0.0 and value <= 20:
+            pass
+        else:
+            raise HTTPException(status_code=403, detail="Depósito suspeito")
 
 
     current_balance = user_repo.get_first_user().current_balance

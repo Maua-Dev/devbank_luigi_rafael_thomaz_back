@@ -2,7 +2,7 @@
 from enum import Enum
 import os
 
-from ..app.repo.user_repository_interface import IUserRepository
+from .repo.user_repository_interface import IUserRepository
 
 from .errors.environment_errors import EnvironmentNotFound
 
