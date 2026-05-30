@@ -28,7 +28,7 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
 
         transaction = Transaction(
-            transaction_type=TransactionTypeEnum.DEPOSIT,
+            transaction_type=TransactionTypeEnum.deposit,
             value=100.0,
             current_balance=1100.0,
             timestamp=1.0
@@ -43,7 +43,7 @@ class Test_UserRepositoryMock:
         repo = UserRepositoryMock()
 
         transaction = Transaction(
-            transaction_type=TransactionTypeEnum.WITHDRAW,
+            transaction_type=TransactionTypeEnum.withdraw,
             value=50.0,
             current_balance=950.0,
             timestamp=1.0
@@ -54,7 +54,7 @@ class Test_UserRepositoryMock:
         transactions = repo.get_all_transactions()
 
         assert len(transactions) == 1
-        assert transactions[0].transaction_type == TransactionTypeEnum.WITHDRAW
+        assert transactions[0].transaction_type == TransactionTypeEnum.withdraw
         assert transactions[0].value == 50.0
 
     def test_update_balance(self):

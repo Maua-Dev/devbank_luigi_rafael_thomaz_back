@@ -28,7 +28,7 @@ class Test_Main:
         repo = main_module.user_repo
         #using the UserRepositoryMock() was throwing index error
         transaction = Transaction(
-            transaction_type = TransactionTypeEnum.DEPOSIT,
+            transaction_type = TransactionTypeEnum.deposit,
             value = 100.0,
             current_balance = 1100.0,
             timestamp = 123456789.0
@@ -45,13 +45,13 @@ class Test_Main:
         #using the UserRepositoryMock() was throwing index error
         response = get_history()
         transaction1 = Transaction(
-            transaction_type = TransactionTypeEnum.DEPOSIT,
+            transaction_type = TransactionTypeEnum.deposit,
             value = 100.0,
             current_balance = 1100.0,
             timestamp = 123456789.0
         )
         transaction2 = Transaction(
-            transaction_type = TransactionTypeEnum.WITHDRAW,
+            transaction_type = TransactionTypeEnum.withdraw,
             value = 150.0,
             current_balance = 950.0,
             timestamp = 246813579.0
@@ -103,7 +103,7 @@ class Test_Main:
 
         history = get_history()
         assert len(history["all_transactions"]) == 1
-        assert history["all_transactions"][0]["type"] == "DEPOSIT"
+        assert history["all_transactions"][0]["type"] == "deposit"
         assert history["all_transactions"][0]["value"] == 100.0
         assert history["all_transactions"][0]["current_balance"] == 1100.0
 
@@ -203,7 +203,7 @@ class Test_Main:
 
         history = get_history()
         assert len(history["all_transactions"]) == 1
-        assert history["all_transactions"][0]["type"] == "WITHDRAW"
+        assert history["all_transactions"][0]["type"] == "withdraw"
         assert history["all_transactions"][0]["value"] == 100.0
         assert history["all_transactions"][0]["current_balance"] == 900.0
 

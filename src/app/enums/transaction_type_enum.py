@@ -1,6 +1,6 @@
 from enum import Enum
 
 class TransactionTypeEnum(Enum):
-    DEPOSIT = "DEPOSIT"
-    WITHDRAW = "WITHDRAW"
+    deposit = "deposit"
+    withdraw = "withdraw"
     

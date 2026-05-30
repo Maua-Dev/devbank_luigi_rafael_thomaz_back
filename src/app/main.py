@@ -71,7 +71,7 @@ def post_deposit(request: dict):
     user_repo.update_balance(new_balance)
 
     transaction = Transaction(
-            transaction_type=TransactionTypeEnum.DEPOSIT,
+            transaction_type=TransactionTypeEnum.deposit,
             value=value,
             current_balance=new_balance
             #timestamp is generated after the constructor
@@ -125,7 +125,7 @@ def post_withdraw(request: dict):
     user_repo.update_balance(new_balance)
 
     transaction = Transaction(
-            transaction_type=TransactionTypeEnum.WITHDRAW,
+            transaction_type=TransactionTypeEnum.withdraw,
             value=value,
             current_balance=new_balance
             #timestamp is generated after the constructor

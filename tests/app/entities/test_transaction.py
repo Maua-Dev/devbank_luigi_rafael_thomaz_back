@@ -1,5 +1,4 @@
 import pytest
-import time
 
 from src.app.entities.transaction import Transaction
 from src.app.enums.transaction_type_enum import TransactionTypeEnum
@@ -9,14 +8,14 @@ class Test_Transaction:
 
     def test_transaction(self):
         transaction = Transaction(
-            transaction_type=TransactionTypeEnum.WITHDRAW,
+            transaction_type=TransactionTypeEnum.deposit,
             value=100.0,
-            current_balance=1000.0,
+            current_balance=1100.0,
             timestamp=123456789.0
         )
-        assert transaction.transaction_type == TransactionTypeEnum.WITHDRAW
+        assert transaction.transaction_type == TransactionTypeEnum.deposit
         assert transaction.value == 100.0
-        assert transaction.current_balance == 1000.0
+        assert transaction.current_balance == 1100.0
         assert transaction.timestamp == 123456789.0
 
 
@@ -33,7 +32,7 @@ class Test_Transaction:
     def test_transaction_type_not_enum(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type="WITHDRAW",
+                transaction_type="withdraw",
                 value=100.0,
                 current_balance=1000.0,
                 timestamp=123456789.0
@@ -43,7 +42,7 @@ class Test_Transaction:
     def test_value_null(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=None,
                 current_balance=1000.0,
                 timestamp=123456789.0
@@ -53,7 +52,7 @@ class Test_Transaction:
     def test_value_not_float(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=100,
                 current_balance=1000.0,
                 timestamp=123456789.0
@@ -63,7 +62,7 @@ class Test_Transaction:
     def test_value_zero(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=0.0,
                 current_balance=1000.0,
                 timestamp=123456789.0
@@ -73,7 +72,7 @@ class Test_Transaction:
     def test_value_negative(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=-100.0,
                 current_balance=1000.0,
                 timestamp=123456789.0
@@ -83,7 +82,7 @@ class Test_Transaction:
     def test_current_balance_null(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=100.0,
                 current_balance=None,
                 timestamp=123456789.0
@@ -93,7 +92,7 @@ class Test_Transaction:
     def test_current_balance_not_float(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=100.0,
                 current_balance=1000,
                 timestamp=123456789.0
@@ -103,7 +102,7 @@ class Test_Transaction:
     def test_current_balance_negative(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.WITHDRAW,
+                transaction_type=TransactionTypeEnum.withdraw,
                 value=100.0,
                 current_balance=-1000.0,
                 timestamp=123456789.0
@@ -112,7 +111,7 @@ class Test_Transaction:
 
     def test_current_balance_zero(self):
         transaction = Transaction(
-            transaction_type=TransactionTypeEnum.WITHDRAW,
+            transaction_type=TransactionTypeEnum.withdraw,
             value=1000.0,
             current_balance=0.0,
             timestamp=123456789.0
@@ -123,7 +122,7 @@ class Test_Transaction:
     def test_timestamp_not_float(self):
         with pytest.raises(ParamNotValidated):
             Transaction(
-                transaction_type=TransactionTypeEnum.DEPOSIT,
+                transaction_type=TransactionTypeEnum.deposit,
                 value=100.0,
                 current_balance=1000.0,
                 timestamp=123456789
